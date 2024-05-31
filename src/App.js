@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { FiSettings } from 'react-icons/fi';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups'; 
 import { Navbar, Footer, Sidebar, ThemeSettings } from './components';
-import { Ecommerce, Calendar, Employees, Customers, Line } from './pages';
+import { Calendar, Drivers, Customers, Line, Dashboard } from './pages';
 import './App.css';
 import { useStateContext } from './contexts/ContextProvider';
 
@@ -63,11 +63,11 @@ const App = () => {
 
               <Routes>
                 {/* dashboard  */}
-                <Route path="/" element={(<Ecommerce />)} />
-                <Route path="/ecommerce" element={(<Ecommerce />)} />
+                <Route path="/" element={(<Dashboard />)} />
+                <Route path="/dashboard" element={(<Dashboard />)} />
 
                 {/* pages  */}
-                <Route path="/employees" element={<Employees />} />
+                <Route path="/drivers" element={<Drivers />} />
                 <Route path="/customers" element={<Customers />} />
 
                 {/* apps  */}
