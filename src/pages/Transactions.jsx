@@ -1,13 +1,14 @@
-import React from 'react'
-import DriverData from '../components/DriverData'
-import { Header } from '../components'
+import React from "react";
+// import DriverData from "../components/DriverData";
+import Pagination from "../components/Pagination";
+import { Header } from "../components";
+import TransactionsData from "../components/TransactionsData";
 const Transactions = () => {
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-      {/* <h1 className="text-2xl font-bold">Drivers</h1>*/}
-      <Header category="Page" title="Drivers" />
-      <div className="flex justify-end mb-8">
-        {/* <Pagination /> */}
+      <Header category="Page" title="Transactions" />
+      <div className="flex justify-between mb-8">
+        <Pagination className="flex justify-start" />
         <div className="m-1">
           <label
             className="  min-w-sm max-w-2xl flex flex-col md:flex-row  border py-2 px-2 rounded-2xl gap-2 shadow-xl focus-within:border-gray-300"
@@ -31,9 +32,9 @@ const Transactions = () => {
           </label>
         </div>
       </div>
-      <DriverData />
+      <TransactionsData />
     </div>
-  )
-}
+  );
+};
 
-export default Transactions
+export default Transactions;

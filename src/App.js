@@ -74,7 +74,7 @@ const App = () => {
                 <Route path="/transactions" element={<Transactions />} />
 
                 {/* charts  */}
-                <Route path="/line" element={<Line />} />          
+                {/* <Route path="/line" element={<Line />} />           */}
               </Routes>
             </div>
             <Footer />
