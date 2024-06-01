@@ -1,10 +1,11 @@
-import React from "react";
-import { Header } from "../components";
-import DriverData from "../components/DriverData";
-const Customers = () => {
+import React from 'react'
+import DriverData from '../components/DriverData'
+import { Header } from '../components'
+const Transactions = () => {
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-      <Header category="Page" title="Customers" />
+      {/* <h1 className="text-2xl font-bold">Drivers</h1>*/}
+      <Header category="Page" title="Drivers" />
       <div className="flex justify-end mb-8">
         {/* <Pagination /> */}
         <div className="m-1">
@@ -32,7 +33,7 @@ const Customers = () => {
       </div>
       <DriverData />
     </div>
-  );
-};
+  )
+}
 
-export default Customers;
+export default Transactions

@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { FiSettings } from 'react-icons/fi';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups'; 
-import { Navbar, Footer, Sidebar, ThemeSettings } from './components';
-import { Calendar, Drivers, Customers, Line, Dashboard } from './pages';
+import { Navbar, Footer, Sidebar, ThemeSettings } from './components';  
+import { Transactions, Drivers, Customers, Line, Dashboard } from './pages';
 import './App.css';
 import { useStateContext } from './contexts/ContextProvider';
 
@@ -71,7 +71,7 @@ const App = () => {
                 <Route path="/customers" element={<Customers />} />
 
                 {/* apps  */}
-                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/transactions" element={<Transactions />} />
 
                 {/* charts  */}
                 <Route path="/line" element={<Line />} />          

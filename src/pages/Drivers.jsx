@@ -1,6 +1,6 @@
 import React from "react";
 import DriverData from "../components/DriverData";
-import { Header } from '../components';
+import { Header } from "../components";
 import Pagination from "../components/Pagination";
 const Drivers = () => {
   return (
