@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { FiSettings } from 'react-icons/fi';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups'; 
 import { Navbar, Footer, Sidebar, ThemeSettings } from './components';  
-import { Transactions, Drivers, Customers, Line, Dashboard } from './pages';
+import { Transactions, Drivers, Customers, Dashboard, Messages, Bookings, Reports } from './pages';
 import './App.css';
 import { useStateContext } from './contexts/ContextProvider';
 
@@ -69,12 +69,11 @@ const App = () => {
                 {/* pages  */}
                 <Route path="/drivers" element={<Drivers />} />
                 <Route path="/customers" element={<Customers />} />
-
-                {/* apps  */}
                 <Route path="/transactions" element={<Transactions />} />
+                <Route path="/bookings" element={<Bookings />} />
+                <Route path="/messages" element={<Messages />} />
+                <Route path="/reports" element={<Reports />} />
 
-                {/* charts  */}
-                {/* <Route path="/line" element={<Line />} />           */}
               </Routes>
             </div>
             <Footer />
