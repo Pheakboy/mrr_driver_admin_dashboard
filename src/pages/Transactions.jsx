@@ -6,8 +6,8 @@ import TransactionsData from '../components/TransactionsData';
 const Transactions = () => (
   <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
     <Header category="Page" title="Transactions" />
-    <div className="flex justify-between mb-8">
-      <Pagination className="flex justify-start" />
+    <div className="flex justify-end mb-8">
+      {/* <Pagination className="flex justify-start" /> */}
       <div className="m-1">
         <label
           className="min-w-sm max-w-2xl flex flex-col md:flex-row border py-2 px-2 rounded-2xl gap-2 shadow-xl focus-within:border-gray-300"

@@ -1,6 +1,6 @@
 import React from "react";
 import { Header } from "../components";
-import DriverData from "../components/DriverData";
+import CustomerData from "../components/CustomerData";
 const Customers = () => {
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
@@ -30,7 +30,7 @@ const Customers = () => {
           </label>
         </div>
       </div>
-      <DriverData />
+      <CustomerData />
     </div>
   );
 };

@@ -33,10 +33,10 @@ export const links = [
         name: 'transactions',
         icon: <AiOutlineTransaction />,  
       },
-      {
-        name: 'bookings',
-        icon: <FiBookOpen />,  
-      },
+      // {
+      //   name: 'bookings',
+      //   icon: <FiBookOpen />,  
+      // },
       {
         name: 'messages',
         icon: <AiOutlineMessage />,  

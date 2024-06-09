@@ -1,14 +1,13 @@
 import React from "react";
 import DriverData from "../components/DriverData";
 import { Header } from "../components";
-import Pagination from "../components/Pagination";
+// import Pagination from "../components/Pagination";
 const Drivers = () => {
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
       {/* <h1 className="text-2xl font-bold">Drivers</h1>*/}
       <Header category="Page" title="Drivers" />
-      <div className="flex justify-end mb-8">
-        {/* <Pagination /> */}
+      <div className="flex justify-end">
         <div className="m-1">
           <label
             className="  min-w-sm max-w-2xl flex flex-col md:flex-row  border py-2 px-2 rounded-2xl gap-2 shadow-xl focus-within:border-gray-300"
