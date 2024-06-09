@@ -83,7 +83,6 @@ const App = () => {
 
                 <Route path="/reports" element={<Report />} /> 
 
-                <Route path="/rep" element={<ReportData />} />
               </Routes>
             </div>
             <Footer />
