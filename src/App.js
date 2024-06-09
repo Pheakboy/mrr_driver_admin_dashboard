@@ -3,7 +3,6 @@ import { createBrowserRouter, BrowserRouter, Routes, Route, createRouteFromEleme
 import { FiSettings } from 'react-icons/fi';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups'; 
 import { Navbar, Footer, Sidebar, ThemeSettings } from './components';  
-import { Transactions, Drivers, Customers, Line, Dashboard } from './pages';
 import Login from './pages/Auth/Login';
 import './App.css';
 import { useStateContext } from './contexts/ContextProvider';
