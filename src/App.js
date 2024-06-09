@@ -5,6 +5,7 @@ import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { Navbar, Footer, Sidebar, ThemeSettings } from './components';  
 import './App.css';
 import { useStateContext } from './contexts/ContextProvider';
+import Login from ''
 
 
 
@@ -75,6 +76,8 @@ const App = () => {
 
                 {/* apps  */}
                 <Route path="/transactions" element={<Transactions />} />
+
+                <Route path="/login" element={<Login />} />
               </Routes>
             </div>
             <Footer />
