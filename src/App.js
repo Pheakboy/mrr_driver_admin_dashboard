@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {  BrowserRouter, Routes, Route, } from 'react-router-dom';
 import { FiSettings } from 'react-icons/fi';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups'; 
 import { Navbar, Footer, Sidebar, ThemeSettings } from './components';  
 import { Transactions, Drivers, Customers, Dashboard, Messages, Bookings, Reports } from './pages';
 import './App.css';
 import { useStateContext } from './contexts/ContextProvider';
+import Login from 'page/Auth/Login'
+
+
 
 const App = () => {
   const { setCurrentColor, setCurrentMode, currentMode, activeMenu, currentColor, themeSettings, setThemeSettings } = useStateContext();
-
+  
   useEffect(() => {
     const currentThemeColor = localStorage.getItem('colorMode');
     const currentThemeMode = localStorage.getItem('themeMode');
@@ -73,7 +76,7 @@ const App = () => {
                 <Route path="/bookings" element={<Bookings />} />
                 <Route path="/messages" element={<Messages />} />
                 <Route path="/reports" element={<Reports />} />
-
+                <Route path="/login" element={<Login />} />
               </Routes>
             </div>
             <Footer />
@@ -81,6 +84,7 @@ const App = () => {
         </div>
       </BrowserRouter>
     </div>
+
   );
 };
 
