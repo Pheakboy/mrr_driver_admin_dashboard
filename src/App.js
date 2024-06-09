@@ -5,7 +5,7 @@ import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { Navbar, Footer, Sidebar, ThemeSettings } from './components';  
 import './App.css';
 import { useStateContext } from './contexts/ContextProvider';
-import Report from './pages/Report';
+
 
 
 
@@ -75,12 +75,6 @@ const App = () => {
 
                 {/* apps  */}
                 <Route path="/transactions" element={<Transactions />} />
-
-                {/* charts  */}
-                
-
-                
-
               </Routes>
             </div>
             <Footer />
