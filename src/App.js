@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react';
-import { createBrowserRouter, BrowserRouter, Routes, Route, createRouteFromElement, } from 'react-router-dom';
+import {  BrowserRouter, Routes, Route, } from 'react-router-dom';
 import { FiSettings } from 'react-icons/fi';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups'; 
 import { Navbar, Footer, Sidebar, ThemeSettings } from './components';  
-import Login from './pages/Auth/Login';
 import './App.css';
 import { useStateContext } from './contexts/ContextProvider';
-import ReportData from './components/ReportData';
 import Report from './pages/Report';
 
 
@@ -79,9 +77,9 @@ const App = () => {
                 <Route path="/transactions" element={<Transactions />} />
 
                 {/* charts  */}
-                <Route path="/login" element={<Login />} /> 
+                
 
-                <Route path="/reports" element={<Report />} /> 
+                
 
               </Routes>
             </div>
