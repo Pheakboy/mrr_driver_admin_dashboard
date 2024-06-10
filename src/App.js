@@ -6,7 +6,7 @@ import { Navbar, Footer, Sidebar, ThemeSettings } from './components';
 import { Transactions, Drivers, Customers, Dashboard, Messages, Bookings, Reports } from './pages';
 import './App.css';
 import { useStateContext } from './contexts/ContextProvider';
-import Login from 'page/Auth/Login'
+import Login from './pages/Auth/Login';
 
 
 
