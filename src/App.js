@@ -6,7 +6,8 @@ import { Navbar, Footer, Sidebar, ThemeSettings } from './components';
 import { Transactions, Drivers, Customers, Dashboard, Messages, Bookings, Reports } from './pages';
 import './App.css';
 import { useStateContext } from './contexts/ContextProvider';
-import Login from 'page/Auth/Login'
+import Login from './pages/Auth/Login';
+import Register from './pages/Auth/Register';
 
 
 
@@ -77,6 +78,7 @@ const App = () => {
                 <Route path="/messages" element={<Messages />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
               </Routes>
             </div>
             <Footer />

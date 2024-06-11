@@ -5,6 +5,7 @@ import { Button } from '.';
 import { userProfileData } from '../data/dummy';
 import { useStateContext } from '../contexts/ContextProvider';
 import avatar from '../data/avatar.jpg';
+import { Link } from 'react-router-dom';
 
 const UserProfile = () => {
   const { currentColor } = useStateContext();
@@ -51,7 +52,8 @@ const UserProfile = () => {
           </div>
         ))}
       </div>
-      <div className="mt-5">
+       {/* button LogOut */}
+      <Link to = "/login" className="mt-5">
         <Button
           color="white"
           bgColor={currentColor}
@@ -59,7 +61,7 @@ const UserProfile = () => {
           borderRadius="10px"
           width="full"
         />
-      </div>
+      </Link>
     </div>
 
   );
