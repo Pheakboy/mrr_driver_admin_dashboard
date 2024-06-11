@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from 'react-router-dom';
 
 const ReportDriver = () => {
-<<<<<<< HEAD
+
     return (
         <div>
             <div className='bg-slate-200 ml-12 mr-12 h-full mb-8 rounded-xl'>
@@ -113,8 +113,7 @@ const ReportDriver = () => {
 
         </div>
     )
-}
-=======
+
   return (
     <div className="bg-slate-200 ml-12 mr-12 h-full mb-8 rounded-xl p-4">
       <b className="text-yellow-600 text-2xl ml-8 mb-6">Report</b>
@@ -240,8 +239,7 @@ const ReportDriver = () => {
         </table>
       </div>
     </div>
-  );
+  )
 };
->>>>>>> 91942f53951e709342d30650013cb107b93551c3
 
 export default ReportDriver;
