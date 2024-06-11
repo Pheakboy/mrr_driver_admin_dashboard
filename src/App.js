@@ -7,6 +7,10 @@ import { Transactions, Drivers, Customers, Dashboard, Messages, Bookings, Report
 import './App.css';
 import { useStateContext } from './contexts/ContextProvider';
 import Login from './pages/Auth/Login';
+<<<<<<< HEAD
+import Register from './pages/Auth/Register';
+=======
+>>>>>>> 91942f53951e709342d30650013cb107b93551c3
 
 
 
@@ -77,6 +81,7 @@ const App = () => {
                 <Route path="/messages" element={<Messages />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
               </Routes>
             </div>
             <Footer />
