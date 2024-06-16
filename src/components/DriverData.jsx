@@ -1,60 +1,19 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const drivers = [
   {
-    name: "Olivia Smith",
-    email: "Olivia.smith@gmail.com",
+    name: "Heng Somnang",
+    email: "Heng.somnang@gmail.com",
     phone: "+44 20 7234 3456",
     status: "Active",
   },
   {
-    name: "Lily Taylor",
-    email: "lilytaylor12@hotmail.com",
+    name: "Nick Taylor",
+    email: "Nick  taylor12@hotmail.com",
     phone: "+44 21 7284 3456",
-    status: "Active",
-  },
-  {
-    name: "Grace Stewart",
-    email: "Stewartserve@ntwor1.com",
-    phone: "+44 21 7884 3456",
-    status: "Active",
-  },
-  {
-    name: "Zoe Diesel",
-    email: "Diesel1423@rediffmail.com",
-    phone: "+44 21 7844 3456",
-    status: "Active",
-  },
-  {
-    name: "Emily Horvath",
-    email: "Emilyhorvath@gmail.com",
-    phone: "+44 21 7844 3489",
-    status: "Active",
-  },
-  {
-    name: "Alexis Francis",
-    email: "AlexisFrancis456@ntwor1.com",
-    phone: "+44 21 7588 3567",
-    status: "Active",
-  },
-  {
-    name: "Charlotte",
-    email: "Charlotte@hotmail.com",
-    phone: "+44 21 7588 3567",
-    status: "Active",
-  },
-  {
-    name: "Aubrey Wisdom",
-    email: "Aubreywisdom56@gmail.com",
-    phone: "+44 21 1238 3567",
-    status: "Active",
-  },
-  {
-    name: "Abigail Laydon",
-    email: "Laydonbills@gnmail.com",
-    phone: "+44 21 9238 3534",
     status: "Active",
   },
 ];
@@ -71,7 +30,9 @@ const DriverData = () => {
   };
 
   const handleDelete = (index) => {
-    if (window.confirm(`Are you sure you want to delete ${data[index].name}?`)) {
+    if (
+      window.confirm(`Are you sure you want to delete ${data[index].name}?`)
+    ) {
       setData(data.filter((_, i) => i !== index));
     }
   };
@@ -79,9 +40,12 @@ const DriverData = () => {
   return (
     <div className="m-4 md:m-10 mt-24 p-4 bg-white rounded-3xl shadow-lg">
       <div className="flex justify-between items-center mb-2">
-        <button className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-300">
+        <Link
+          to="/create-driver"
+          className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-300"
+        >
           Add Driver
-        </button>
+        </Link>
       </div>
       <table className="min-w-full bg-white">
         <thead>
@@ -95,20 +59,25 @@ const DriverData = () => {
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
           {data.map((driver, index) => (
-            <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
-              <td className="py-3 px-6 text-left">{driver.name}</td>
-              <td className="py-3 px-6 text-left">{driver.email}</td>
-              <td className="py-3 px-6 text-left">{driver.phone}</td>
-              <td className="py-3 px-6 text-left">
-                <div className="flex items-center">
-                  <button className="bg-green-200 text-green-700 py-1 px-3 rounded-full text-xs mr-2">
-                    Activate
-                  </button>
-                  <button className="bg-red-200 text-red-700 py-1 px-3 rounded-full text-xs">
-                    Deactivate
-                  </button>
-                </div>
-              </td>
+            <tr
+              key={index}
+              className="border-b border-gray-200 hover:bg-gray-100"
+            >
+              <Link to={`/driver/${index}`} className="contents">
+                <td className="py-3 px-6 text-left">{driver.name}</td>
+                <td className="py-3 px-6 text-left">{driver.email}</td>
+                <td className="py-3 px-6 text-left">{driver.phone}</td>
+                <td className="py-3 px-6 text-left">
+                  <div className="flex items-center">
+                    <button className="bg-green-200 text-green-700 py-1 px-3 rounded-full text-xs mr-2">
+                      Activate
+                    </button>
+                    <button className="bg-red-200 text-red-700 py-1 px-3 rounded-full text-xs">
+                      Deactivate
+                    </button>
+                  </div>
+                </td>
+              </Link>
               <td className="py-3 px-6 text-left">
                 <div className="flex items-center">
                   <button
