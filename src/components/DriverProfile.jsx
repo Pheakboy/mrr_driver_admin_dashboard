@@ -1,69 +1,68 @@
-import React, { useState } from "react";
-// import defaultImage from "./404image.png"; // Import your default image here
-import img1 from '../data/product1.jpg'
-import img2 from '../data/product2.jpg'
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config/config";
+const DriverProfile = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [driver, setDriver] = useState(null);
+  const [viewImage, setViewImage] = useState(null);
+  const [isApproved, setIsApproved] = useState(false);
 
-const DriverForm = () => {
-  const [driver, setDriver] = useState({
-    driverNumber: "",
-    gender: "",
-    fullName: "",
-    bod: "",
-    phoneNumber: "",
-    phoneNumberCode: "US",
-    email: "",
-    driverLicenseImage: img1, // Default image for driver license
-    nationalIDCardImage: img2, // Default image for national ID card
-    driverProfileImage: null, // Store driver profile image
-  });
+  useEffect(() => {
+    console.log("Received ID:", id); // Debugging: Check if the id is received correctly
 
-  const [viewImage, setViewImage] = useState(null); // State to manage which image to view
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setDriver({
-      ...driver,
-      [name]: value,
-    });
-  };
-
-  const handleImageUpload = (e, fieldName) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setDriver({
-          ...driver,
-          [fieldName]: reader.result,
+    if (id) {
+      fetch(`${API_BASE_URL}/api/users/driver/${id}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setDriver(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching driver data:", error);
         });
-      };
-      reader.readAsDataURL(file);
     }
-  };
+  }, [id]);
 
-  const openImageView = (fieldName) => {
-    if (fieldName === "driverLicenseImage") {
-      setViewImage(driver.driverLicenseImage);
-    } else if (fieldName === "nationalIDCardImage") {
-      setViewImage(driver.nationalIDCardImage);
-    } else if (fieldName === "driverProfileImage") {
-      setViewImage(driver.driverProfileImage);
-    }
-  };
-
-  const closeImageView = () => {
-    setViewImage(null);
+  const handleCancel = () => {
+    navigate('/driver'); // Navigate back to driver list or any other desired route
   };
 
   const handleSave = () => {
-    console.log("Saved", driver);
-    // Implement save functionality here
+    fetch(`http://ec2-54-82-25-173.compute-1.amazonaws.com:8000/api/users/driver/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: 'approved' }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        alert('Driver profile approved');
+        setIsApproved(true); // Set the state to true when approved
+      })
+      .catch((error) => {
+        console.error('Error approving driver profile:', error);
+      });
   };
 
-  const handleCancel = () => {
-    console.log("Cancelled");
-    // Implement cancel functionality here
+  const handleImageUpload = (event, type) => {
+    const file = event.target.files[0];
+    // Handle image upload here, you can use form data to send the image to the server
   };
+
+  if (!driver) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="m-4 md:m-10 mt-24 p-8 bg-gradient-to-r from-blue-50 to-blue-100 rounded-3xl shadow-xl">
@@ -72,7 +71,7 @@ const DriverForm = () => {
           {/* Profile Image */}
           <div
             className="w-64 h-64 bg-gray-300 flex items-center justify-center mb-4 overflow-hidden relative cursor-pointer"
-            onClick={() => openImageView("driverProfileImage")}
+            onClick={() => setViewImage(driver.driverProfileImage || '')}
           >
             {driver.driverProfileImage ? (
               <img
@@ -111,10 +110,11 @@ const DriverForm = () => {
               Cancel
             </button>
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300"
+              className={`bg-green-500 text-white px-4 py-2 rounded-md transition duration-300 ${isApproved ? 'bg-green-600' : 'hover:bg-green-600'}`}
               onClick={handleSave}
+              disabled={isApproved} // Disable the button once approved
             >
-              Approved
+              {isApproved ? 'Approved' : 'Approve'}
             </button>
           </div>
         </div>
@@ -129,8 +129,8 @@ const DriverForm = () => {
               <input
                 type="text"
                 name="driverNumber"
-                value={driver.driverNumber}
-                onChange={handleChange}
+                value={driver._id}
+                onChange={(e) => setDriver({ ...driver, _id: e.target.value })}
                 className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
             </div>
@@ -142,7 +142,7 @@ const DriverForm = () => {
                 type="text"
                 name="gender"
                 value={driver.gender}
-                onChange={handleChange}
+                onChange={(e) => setDriver({ ...driver, gender: e.target.value })}
                 className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
             </div>
@@ -153,20 +153,20 @@ const DriverForm = () => {
               <input
                 type="text"
                 name="fullName"
-                value={driver.fullName}
-                onChange={handleChange}
+                value={`${driver.first_name} ${driver.last_name}`}
+                onChange={(e) => setDriver({ ...driver, full_name: e.target.value })}
                 className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700">
-                Birth of Date
+                Birth Date
               </label>
               <input
                 type="date"
                 name="bod"
-                value={driver.bod}
-                onChange={handleChange}
+                value={driver.date_of_birth.split("T")[0]}
+                onChange={(e) => setDriver({ ...driver, date_of_birth: e.target.value })}
                 className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
             </div>
@@ -177,8 +177,8 @@ const DriverForm = () => {
               <div className="flex">
                 <select
                   name="phoneNumberCode"
-                  value={driver.phoneNumberCode}
-                  onChange={handleChange}
+                  value={driver.phone_number_code || "US"}
+                  onChange={(e) => setDriver({ ...driver, phone_number_code: e.target.value })}
                   className="mt-1 block w-20 border border-gray-300 rounded-l-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
                 >
                   <option value="US">US</option>
@@ -188,8 +188,8 @@ const DriverForm = () => {
                 <input
                   type="text"
                   name="phoneNumber"
-                  value={driver.phoneNumber}
-                  onChange={handleChange}
+                  value={driver.phone_number}
+                  onChange={(e) => setDriver({ ...driver, phone_number: e.target.value })}
                   className="mt-1 block w-full border border-gray-300 rounded-r-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
                 />
               </div>
@@ -201,8 +201,8 @@ const DriverForm = () => {
               <input
                 type="email"
                 name="email"
-                value={driver.email}
-                onChange={handleChange}
+                value={driver.user_id.email}
+                onChange={(e) => setDriver({ ...driver, email: e.target.value })}
                 className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
             </div>
@@ -210,24 +210,36 @@ const DriverForm = () => {
             {/* Image Fields */}
             <div
               className="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center mb-4 overflow-hidden cursor-pointer"
-              onClick={() => openImageView("driverLicenseImage")}
+              onClick={() => setViewImage(driver.driverLicenseImage || '')}
             >
-              <img
-                src={driver.driverLicenseImage}
-                alt="Driver License"
-                className="w-full h-full object-cover"
-              />
+              {driver.driverLicenseImage ? (
+                <img
+                  src={driver.driverLicenseImage}
+                  alt="Driver License"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-gray-500 text-2xl font-semibold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+
+                </span>
+              )}
             </div>
 
             <div
               className="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center mb-4 overflow-hidden cursor-pointer"
-              onClick={() => openImageView("nationalIDCardImage")}
+              onClick={() => setViewImage(driver.nationalIdCardImage || '')}
             >
-              <img
-                src={driver.nationalIDCardImage}
-                alt="National ID Card"
-                className="w-full h-full object-cover"
-              />
+              {driver.nationalIdCardImage ? (
+                <img
+                  src={driver.nationalIdCardImage}
+                  alt="National ID Card"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-gray-500 text-2xl font-semibold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+               
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -244,7 +256,7 @@ const DriverForm = () => {
             />
             <button
               className="float-right mt-5 bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition duration-300"
-              onClick={closeImageView}
+              onClick={() => setViewImage(null)}
             >
               Close
             </button>
@@ -255,4 +267,4 @@ const DriverForm = () => {
   );
 };
 
-export default DriverForm;
+export default DriverProfile;

@@ -1,38 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-
-const drivers = [
-  {
-    name: "Heng Somnang",
-    email: "Heng.somnang@gmail.com",
-    phone: "+44 20 7234 3456",
-    status: "Active",
-  },
-  {
-    name: "Nick Taylor",
-    email: "Nick  taylor12@hotmail.com",
-    phone: "+44 21 7284 3456",
-    status: "Active",
-  },
-];
+import { API_BASE_URL } from "../config/config";
 
 const DriverData = () => {
-  const [data, setData] = useState(drivers);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/users/all-drivers`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const sortedData = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        setData(sortedData); // Sort by created_at in descending order
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  }, []);
 
   const handleView = (index) => {
-    alert(`Viewing driver: ${data[index].name}`);
+    const fullName = `${data[index].first_name} ${data[index].last_name}`;
+    alert(`Viewing driver: ${fullName}`);
   };
 
   const handleEdit = (index) => {
-    alert(`Editing driver: ${data[index].name}`);
+    const fullName = `${data[index].first_name} ${data[index].last_name}`;
+    alert(`Editing driver: ${fullName}`);
   };
 
   const handleDelete = (index) => {
-    if (
-      window.confirm(`Are you sure you want to delete ${data[index].name}?`)
-    ) {
+    const fullName = `${data[index].first_name} ${data[index].last_name}`;
+    if (window.confirm(`Are you sure you want to delete ${fullName}?`)) {
       setData(data.filter((_, i) => i !== index));
     }
   };
@@ -49,7 +53,7 @@ const DriverData = () => {
       </div>
       <table className="min-w-full bg-white">
         <thead>
-          <tr className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white text-whiteuppercase text-sm leading-normal">
+          <tr className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white uppercase text-sm leading-normal">
             <th className="py-3 px-6 text-left">Name</th>
             <th className="py-3 px-6 text-left">Email</th>
             <th className="py-3 px-6 text-left">Phone Number</th>
@@ -59,25 +63,24 @@ const DriverData = () => {
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
           {data.map((driver, index) => (
-            <tr
-              key={index}
-              className="border-b border-gray-200 hover:bg-gray-100"
-            >
-              <Link to={`/driver/${index}`} className="contents">
-                <td className="py-3 px-6 text-left">{driver.name}</td>
-                <td className="py-3 px-6 text-left">{driver.email}</td>
-                <td className="py-3 px-6 text-left">{driver.phone}</td>
-                <td className="py-3 px-6 text-left">
-                  <div className="flex items-center">
-                    <button className="bg-green-200 text-green-700 py-1 px-3 rounded-full text-xs mr-2">
-                      Activate
-                    </button>
-                    <button className="bg-red-200 text-red-700 py-1 px-3 rounded-full text-xs">
-                      Deactivate
-                    </button>
-                  </div>
-                </td>
-              </Link>
+            <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
+              <td className="py-3 px-6 text-left">
+                <Link to={`/driver/${driver._id}`} className="text-blue-500 hover:underline">
+                  {`${driver.first_name} ${driver.last_name}`}
+                </Link>
+              </td>
+              <td className="py-3 px-6 text-left">{driver.user_id.email}</td>
+              <td className="py-3 px-6 text-left">{driver.phone_number}</td>
+              <td className="py-3 px-6 text-left">
+                <div className="flex items-center">
+                  <button className="bg-green-200 text-green-700 py-1 px-3 rounded-full text-xs mr-2">
+                    Activate
+                  </button>
+                  <button className="bg-red-200 text-red-700 py-1 px-3 rounded-full text-xs">
+                    Deactivate
+                  </button>
+                </div>
+              </td>
               <td className="py-3 px-6 text-left">
                 <div className="flex items-center">
                   <button

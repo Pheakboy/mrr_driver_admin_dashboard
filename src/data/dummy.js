@@ -45,10 +45,7 @@ export const links = [
         name: 'reports',
         icon: <AiOutlineRedEnvelope />,  
       },
-      {
-        name: 'login ',
-        icon: <AiOutlineRedEnvelope />,  
-      },
+
     ],
   },
 ];
