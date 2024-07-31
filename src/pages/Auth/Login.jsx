@@ -1,13 +1,16 @@
-// src/pages/Auth/Login.js
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import { login as loginUser, fetchUserProfile } from '../../api/auth';
+import logo from '../../assets/logo.jpg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -32,63 +35,64 @@ const Login = () => {
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-md bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
-      <div className="flex justify-center items-center w-16 h-16 rounded-full">
-        <img src="" alt="Logo" />
-      </div>
-      <div className="w-full">
-        <div className="text-center">
-          <h1 className="text-3xl font-semibold text-gray-900">
-            <b>Admin</b> Login
-          </h1>
+    <div className="flex items-center justify-center min-h-screen bg-gray-600">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg ring-1 ring-gray-200">
+        <div className="flex justify-center mb-6">
+          <img src={logo} alt="Logo" className="w-28 h-28" />
         </div>
-        <div className="mt-5">
-          <form onSubmit={handleSubmit}>
-            <div className="relative mt-6">
-              <input
-                type="email"
-                name="email"
-                id="email"
-                className="peer mt-1 w-full border-b-2 border-gray-300 focus:border-indigo-600 outline-none"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <label
-                htmlFor="email"
-                className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-gray-500 transition-all peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:opacity-50 peer-focus:-translate-y-1/2 peer-focus:scale-75 peer-focus:text-indigo-600"
-              >
-                Email Address
-              </label>
-            </div>
-            <div className="relative mt-6">
-              <input
-                type="password"
-                name="password"
-                id="password"
-                className="peer mt-1 w-full border-b-2 border-gray-300 focus:border-indigo-600 outline-none"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <label
-                htmlFor="password"
-                className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-gray-500 transition-all peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:opacity-50 peer-focus:-translate-y-1/2 peer-focus:scale-75 peer-focus:text-indigo-600"
-              >
-                Password
-              </label>
-            </div>
-            {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
-            <div className="my-6">
-              <button
-                type="submit"
-                className="w-full rounded-md bg-green-400 px-3 py-4 text-black hover:bg-green-300"
-              >
-                Login
-              </button>
-            </div>
-          </form>
-        </div>
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-12">
+          <b>Admin</b> Login
+        </h1>
+        <form onSubmit={handleSubmit}>
+          <div className="relative mb-12">
+            <input
+              type="email"
+              name="email"
+              id="email"
+              className="peer w-full border-b-2 border-gray-300 py-2 px-3 rounded-md focus:border-indigo-500 focus:ring-0 outline-none placeholder-transparent"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <label
+              htmlFor="email"
+              className="absolute left-3 -top-3 transform -translate-y-1/2 text-gray-500 transition-all duration-300 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:-translate-y-1/2 peer-focus:-top-5 peer-focus:text-indigo-600 peer-focus:text-xs"
+            >
+              Email Address
+            </label>
+          </div>
+          <div className="relative mb-6">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              id="password"
+              className="peer w-full border-b-2 border-gray-300 py-2 px-3 rounded-md focus:border-indigo-500 focus:ring-0 outline-none placeholder-transparent"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <label
+              htmlFor="password"
+              className="absolute left-3 -top-3 transform -translate-y-1/2 text-gray-500 transition-all duration-300 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:-translate-y-1/2 peer-focus:-top-5 peer-focus:text-indigo-600 peer-focus:text-xs"
+            >
+              Password
+            </label>
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 focus:outline-none"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+            </button>
+          </div>
+          {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
+          <button
+            type="submit"
+            className="w-full py-3 px-4 bg-red-600 text-white rounded-md shadow-md hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-300"
+          >
+            Login
+          </button>
+        </form>
       </div>
     </div>
   );

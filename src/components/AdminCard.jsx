@@ -90,7 +90,7 @@ const AdminCard = () => {
       </div>
       <div className="px-6 py-4">
         <h3 className="text-sm font-medium text-gray-700">Total Amount</h3>
-        <p className="text-3xl font-bold text-gray-900">194726478</p>
+        <p className="text-3xl font-bold text-gray-900">1947278</p>
       </div>
     </div>
   </div>

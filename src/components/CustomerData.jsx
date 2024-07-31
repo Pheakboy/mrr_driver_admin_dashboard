@@ -86,7 +86,7 @@ const CustomerData = () => {
   };
 
   return (
-    <div className="m-4 md:m-10 mt-24 p-4 bg-white rounded-3xl shadow-lg">
+    <div className="m-4 md:m-1 mt-24 p-4 bg-white rounded-3xl shadow-lg">
       <table className="min-w-full bg-white">
         <thead>
           <tr className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white uppercase text-sm leading-normal">

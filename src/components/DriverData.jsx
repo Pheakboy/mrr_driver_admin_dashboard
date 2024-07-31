@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { API_BASE_URL } from "../config/config";
 
-const DriverData = () => {
+const DriverData = ({ searchQuery, activeFilter }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -16,7 +16,9 @@ const DriverData = () => {
         return response.json();
       })
       .then((data) => {
-        const sortedData = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        const sortedData = data.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
         setData(sortedData); // Sort by created_at in descending order
       })
       .catch((error) => {
@@ -41,8 +43,29 @@ const DriverData = () => {
     }
   };
 
+  const handleStatusChange = (index, status) => {
+    const updatedData = [...data];
+    updatedData[index].status = status;
+    setData(updatedData);
+  };
+
+  const filteredData = data.filter((driver) => {
+    const fullName = `${driver.first_name} ${driver.last_name}`.toLowerCase();
+    const email = driver.user_id.email.toLowerCase();
+    const matchesSearchQuery =
+      fullName.includes(searchQuery.toLowerCase()) ||
+      email.includes(searchQuery.toLowerCase());
+
+    const matchesFilter =
+      activeFilter === "all" ||
+      (activeFilter === "active" && driver.status === "active") ||
+      (activeFilter === "inactive" && driver.status === "inactive");
+
+    return matchesSearchQuery && matchesFilter;
+  });
+
   return (
-    <div className="m-4 md:m-10 mt-24 p-4 bg-white rounded-3xl shadow-lg">
+    <div className="m-4 md:m-1 mt-24 p-4 bg-white rounded-3xl shadow-lg">
       <div className="flex justify-between items-center mb-2">
         <Link
           to="/create-driver"
@@ -62,10 +85,16 @@ const DriverData = () => {
           </tr>
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
-          {data.map((driver, index) => (
-            <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
+          {filteredData.map((driver, index) => (
+            <tr
+              key={index}
+              className="border-b border-gray-200 hover:bg-gray-100"
+            >
               <td className="py-3 px-6 text-left">
-                <Link to={`/driver/${driver._id}`} className="text-blue-500 hover:underline">
+                <Link
+                  to={`/driver/${driver._id}`}
+                  className="text-blue-500 hover:underline"
+                >
                   {`${driver.first_name} ${driver.last_name}`}
                 </Link>
               </td>
@@ -73,10 +102,24 @@ const DriverData = () => {
               <td className="py-3 px-6 text-left">{driver.phone_number}</td>
               <td className="py-3 px-6 text-left">
                 <div className="flex items-center">
-                  <button className="bg-green-200 text-green-700 py-1 px-3 rounded-full text-xs mr-2">
+                  <button
+                    className={`py-1 px-3 rounded-full text-xs mr-2 ${
+                      driver.status === "active"
+                        ? "bg-green-200 text-green-700"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                    onClick={() => handleStatusChange(index, "active")}
+                  >
                     Activate
                   </button>
-                  <button className="bg-red-200 text-red-700 py-1 px-3 rounded-full text-xs">
+                  <button
+                    className={`py-1 px-3 rounded-full text-xs ${
+                      driver.status === "inactive"
+                        ? "bg-red-200 text-red-700"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                    onClick={() => handleStatusChange(index, "inactive")}
+                  >
                     Deactivate
                   </button>
                 </div>

@@ -4,6 +4,7 @@ import CustomerData from "../components/CustomerData";
 const Customers = () => {
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
+      <div className="flex justify-between">
       <Header category="Page" title="Customers" />
       <div className="flex justify-end mb-8">
         {/* <Pagination /> */}
@@ -29,6 +30,7 @@ const Customers = () => {
             </button>
           </label>
         </div>
+      </div>
       </div>
       <CustomerData />
     </div>
