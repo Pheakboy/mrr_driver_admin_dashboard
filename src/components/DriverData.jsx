@@ -51,7 +51,7 @@ const DriverData = ({ searchQuery, activeFilter }) => {
 
   const filteredData = data.filter((driver) => {
     const fullName = `${driver.first_name} ${driver.last_name}`.toLowerCase();
-    const email = driver.user_id.email.toLowerCase();
+    const email = driver.user_id.email;
     const matchesSearchQuery =
       fullName.includes(searchQuery.toLowerCase()) ||
       email.includes(searchQuery.toLowerCase());

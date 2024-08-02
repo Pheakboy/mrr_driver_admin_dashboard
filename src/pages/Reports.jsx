@@ -3,8 +3,7 @@ import ReportDriver from '../components/ReportDriver'
 
 const Report = () => {
   return (
-    <ReportDriver>
-    </ReportDriver>
+    <ReportDriver />
   )
 }
 
