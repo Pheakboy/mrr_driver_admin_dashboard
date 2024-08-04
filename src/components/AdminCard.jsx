@@ -22,7 +22,7 @@ const AdminCard = () => {
       </div>
       <div className="px-6 py-4">
         <h3 className="text-sm font-medium text-gray-700">Total Passenger</h3>
-        <p className="text-3xl font-bold text-gray-900">12,768</p>
+        <p className="text-3xl font-bold text-gray-900">78</p>
       </div>
     </div>
     <div className="flex items-center bg-white rounded-lg overflow-hidden shadow-lg transform transition duration-500 hover:scale-105">
@@ -44,7 +44,7 @@ const AdminCard = () => {
       </div>
       <div className="px-6 py-4">
         <h3 className="text-sm font-medium text-gray-700">Total Driver</h3>
-        <p className="text-3xl font-bold text-gray-900">39,265</p>
+        <p className="text-3xl font-bold text-gray-900">47</p>
       </div>
     </div>
     <div className="flex items-center bg-white rounded-lg overflow-hidden shadow-lg transform transition duration-500 hover:scale-105">
@@ -68,7 +68,7 @@ const AdminCard = () => {
         <h3 className="text-sm font-medium text-gray-700">
           Total Booking 
         </h3>
-        <p className="text-3xl font-bold text-gray-900">142,334</p>
+        <p className="text-3xl font-bold text-gray-900">164</p>
       </div>
     </div>
     <div className="flex items-center bg-white rounded-lg overflow-hidden shadow-lg transform transition duration-500 hover:scale-105">
@@ -90,7 +90,7 @@ const AdminCard = () => {
       </div>
       <div className="px-6 py-4">
         <h3 className="text-sm font-medium text-gray-700">Total Amount</h3>
-        <p className="text-3xl font-bold text-gray-900">1947278</p>
+        <p className="text-3xl font-bold text-gray-900">1570 $</p>
       </div>
     </div>
   </div>

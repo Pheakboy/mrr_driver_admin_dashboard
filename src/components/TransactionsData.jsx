@@ -2,15 +2,15 @@ import React from "react";
 
 const TransactionsData = ({ searchQuery }) => {
   const data = [
-    { id: 340, name: "Noah", paymentType: "App Payment", amount: "£22.00", date: "28,Dec 17 - 01:22 PM" },
-    { id: 339, name: "Liam", paymentType: "App Payment", amount: "£50.00", date: "28,Dec 17 - 01:22 PM" },
-    { id: 338, name: "Mason", paymentType: "App Payment", amount: "£08.88", date: "28,Dec 17 - 01:22 PM" },
-    { id: 337, name: "Jacob", paymentType: "App Payment", amount: "£22.00", date: "28,Dec 17 - 01:22 PM" },
-    { id: 336, name: "William", paymentType: "App Payment", amount: "£25.00", date: "28,Dec 17 - 01:22 PM" },
-    { id: 335, name: "Ethan", paymentType: "App Payment", amount: "£23.00", date: "28,Dec 17 - 01:22 PM" },
-    { id: 334, name: "James", paymentType: "App Payment", amount: "£12.05", date: "28,Dec 17 - 01:22 PM" },
-    { id: 333, name: "Alexander", paymentType: "App Payment", amount: "£20.00", date: "28,Dec 17 - 01:22 PM" },
-    { id: 332, name: "Alex", paymentType: "App Payment", amount: "£22.00", date: "28,Dec 17 - 01:22 PM" },
+    { id: 1, name: "heng", paymentType: "App Payment", amount: "$22.00", date: "28,Dec 17 - 01:22 PM" },
+    { id: 2, name: "hong", paymentType: "Cash Payment", amount: "$50.00", date: "28,Dec 17 - 01:22 PM" },
+    { id: 3, name: "hang", paymentType: "App Payment", amount: "$22.00", date: "28,Dec 17 - 01:22 PM" },
+    { id: 4, name: "jonh", paymentType: "Cash Payment", amount: "$25.00", date: "28,Dec 17 - 01:22 PM" },
+    { id: 5, name: "Taihor", paymentType: "App Payment", amount: "$23.00", date: "28,Dec 17 - 01:22 PM" },
+    { id: 6, name: "Lun", paymentType: "App Payment", amount: "$12.05", date: "28,Dec 17 - 01:22 PM" },
+    { id: 7, name: "dara", paymentType: "Cash Payment", amount: "$20.00", date: "28,Dec 17 - 01:22 PM" },
+    { id: 8, name: "kunvath", paymentType: "App Payment", amount: "$22.00", date: "28,Dec 17 - 01:22 PM" },
+    { id: 9, name: "meng", paymentType: "Cash Payment", amount: "$8.88", date: "28,Dec 17 - 01:22 PM" },
   ];
 
   const filteredData = data.filter(row => 

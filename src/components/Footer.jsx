@@ -13,7 +13,7 @@ const Footer = () => (
         rel="noreferrer"
         className="text-blue-500"
       >
-        Mrr Driver App
+        Mrr Driver Team
       </a>
     </p>
   </div>

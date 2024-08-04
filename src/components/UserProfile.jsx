@@ -1,14 +1,39 @@
 import React from 'react';
 import { MdOutlineCancel } from 'react-icons/md';
-
 import { Button } from '.';
-import { userProfileData } from '../data/dummy';
 import { useStateContext } from '../contexts/ContextProvider';
 import avatar from '../data/avatar.jpg';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/authContext';
+
+// this is the logout api
+const LOGOUT_API_URL = "http://ec2-54-82-25-173.compute-1.amazonaws.com:8000/api/users/logout";
 
 const UserProfile = () => {
   const { currentColor } = useStateContext();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(LOGOUT_API_URL, {
+        method: 'POST',
+        credentials: 'include', // Include cookies with the request
+      });
+
+      if (response.ok) {
+        // Call the logout function from auth context
+        logout();
+
+        // Redirect to login page
+        navigate("/login");
+      } else {
+        console.error('Logout failed');
+      }
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   return (
     <div className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96">
@@ -29,41 +54,23 @@ const UserProfile = () => {
           alt="user-profile"
         />
         <div>
-          <p className="font-semibold text-xl dark:text-gray-200"> Michael Roberts </p>
-          <p className="text-gray-500 text-sm dark:text-gray-400">  Administrator   </p>
-          <p className="text-gray-500 text-sm font-semibold dark:text-gray-400"> info@shop.com </p>
+          <p className="font-semibold text-xl dark:text-gray-200">Mr. Admin</p>
+          <p className="text-gray-500 text-sm dark:text-gray-400">Administrator</p>
+          <p className="text-gray-500 text-sm font-semibold dark:text-gray-400">Admin@admin.com</p>
         </div>
       </div>
-      <div>
-        {userProfileData.map((item, index) => (
-          <div key={index} className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]">
-            <button
-              type="button"
-              style={{ color: item.iconColor, backgroundColor: item.iconBg }}
-              className=" text-xl rounded-lg p-3 hover:bg-light-gray"
-            >
-              {item.icon}
-            </button>
-
-            <div>
-              <p className="font-semibold dark:text-gray-200 ">{item.title}</p>
-              <p className="text-gray-500 text-sm dark:text-gray-400"> {item.desc} </p>
-            </div>
-          </div>
-        ))}
-      </div>
-       {/* button LogOut */}
-      <Link to = "/login" className="mt-5">
+      {/* button LogOut */}
+      <div className="mt-5">
         <Button
           color="white"
           bgColor={currentColor}
           text="Logout"
           borderRadius="10px"
           width="full"
+          onClick={handleLogout}
         />
-      </Link>
+      </div>
     </div>
-
   );
 };
 
