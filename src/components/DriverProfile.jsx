@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { API_BASE_URL } from "../config/config";
+
 const DriverProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -9,8 +12,6 @@ const DriverProfile = () => {
   const [isApproved, setIsApproved] = useState(false);
 
   useEffect(() => {
-    console.log("Received ID:", id); // Debugging: Check if the id is received correctly
-
     if (id) {
       fetch(`${API_BASE_URL}/api/users/driver/${id}`)
         .then((response) => {
@@ -21,24 +22,22 @@ const DriverProfile = () => {
         })
         .then((data) => {
           setDriver(data);
+          setIsApproved(data.status === "approved");
         })
         .catch((error) => {
           console.error("Error fetching driver data:", error);
+          toast.error("Error fetching driver data");
         });
     }
   }, [id]);
 
-  const handleCancel = () => {
-    navigate('/driver'); // Navigate back to driver list or any other desired route
-  };
-
-  const handleSave = () => {
-    fetch(`http://ec2-54-82-25-173.compute-1.amazonaws.com:8000/api/users/driver/${id}`, {
-      method: 'PUT',
+  const handleApprove = () => {
+    fetch(`${API_BASE_URL}/api/users/driver/${id}`, {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ status: 'approved' }),
+      body: JSON.stringify({ status: "approved" }),
     })
       .then((response) => {
         if (!response.ok) {
@@ -47,17 +46,47 @@ const DriverProfile = () => {
         return response.json();
       })
       .then((data) => {
-        alert('Driver profile approved');
-        setIsApproved(true); // Set the state to true when approved
+        toast.success("Driver profile approved");
+        setIsApproved(true);
       })
       .catch((error) => {
-        console.error('Error approving driver profile:', error);
+        console.error("Error approving driver profile:", error);
+        toast.error("Error approving driver profile already approved");
       });
+  };
+
+  const handleCancel = () => {
+    navigate("/driver");
   };
 
   const handleImageUpload = (event, type) => {
     const file = event.target.files[0];
-    // Handle image upload here, you can use form data to send the image to the server
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
+      fetch(`${API_BASE_URL}/api/users/driver/${id}/upload/${type}`, {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          toast.success("Image uploaded successfully");
+          // Optionally update driver state with new image URL
+          setDriver((prevDriver) => ({
+            ...prevDriver,
+            [`${type}`]: data.imageUrl
+          }));
+        })
+        .catch((error) => {
+          console.error("Error uploading image:", error);
+          toast.error("Error uploading image");
+        });
+    }
   };
 
   if (!driver) {
@@ -66,12 +95,13 @@ const DriverProfile = () => {
 
   return (
     <div className="m-4 md:m-10 mt-24 p-8 bg-gradient-to-r from-blue-50 to-blue-100 rounded-3xl shadow-xl">
+      <ToastContainer />
       <div className="flex flex-wrap">
         <div className="w-full md:w-1/3 flex flex-col items-center">
           {/* Profile Image */}
           <div
             className="w-64 h-64 bg-gray-300 flex items-center justify-center mb-4 overflow-hidden relative cursor-pointer"
-            onClick={() => setViewImage(driver.driverProfileImage || '')}
+            onClick={() => setViewImage(driver.driverProfileImage || "")}
           >
             {driver.driverProfileImage ? (
               <img
@@ -110,11 +140,13 @@ const DriverProfile = () => {
               Cancel
             </button>
             <button
-              className={`bg-green-500 text-white px-4 py-2 rounded-md transition duration-300 ${isApproved ? 'bg-green-600' : 'hover:bg-green-600'}`}
-              onClick={handleSave}
-              disabled={isApproved} // Disable the button once approved
+              className={`bg-green-500 text-white px-4 py-2 rounded-md transition duration-300 ${
+                isApproved ? "bg-green-600" : "hover:bg-green-600"
+              }`}
+              onClick={handleApprove}
+              disabled={isApproved}
             >
-              {isApproved ? 'Approved' : 'Approve'}
+              {isApproved ? "Approved" : "Approve"}
             </button>
           </div>
         </div>
@@ -130,8 +162,8 @@ const DriverProfile = () => {
                 type="text"
                 name="driverNumber"
                 value={driver._id}
-                onChange={(e) => setDriver({ ...driver, _id: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
+                readOnly
+                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2"
               />
             </div>
             <div>
@@ -142,8 +174,10 @@ const DriverProfile = () => {
                 type="text"
                 name="gender"
                 value={driver.gender}
-                onChange={(e) => setDriver({ ...driver, gender: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
+                onChange={(e) =>
+                  setDriver({ ...driver, gender: e.target.value })
+                }
+                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2"
               />
             </div>
             <div>
@@ -154,8 +188,10 @@ const DriverProfile = () => {
                 type="text"
                 name="fullName"
                 value={`${driver.first_name} ${driver.last_name}`}
-                onChange={(e) => setDriver({ ...driver, full_name: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
+                onChange={(e) =>
+                  setDriver({ ...driver, full_name: e.target.value })
+                }
+                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2"
               />
             </div>
             <div>
@@ -166,8 +202,10 @@ const DriverProfile = () => {
                 type="date"
                 name="bod"
                 value={driver.date_of_birth.split("T")[0]}
-                onChange={(e) => setDriver({ ...driver, date_of_birth: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
+                onChange={(e) =>
+                  setDriver({ ...driver, date_of_birth: e.target.value })
+                }
+                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2"
               />
             </div>
             <div>
@@ -178,8 +216,10 @@ const DriverProfile = () => {
                 <select
                   name="phoneNumberCode"
                   value={driver.phone_number_code || "US"}
-                  onChange={(e) => setDriver({ ...driver, phone_number_code: e.target.value })}
-                  className="mt-1 block w-20 border border-gray-300 rounded-l-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
+                  onChange={(e) =>
+                    setDriver({ ...driver, phone_number_code: e.target.value })
+                  }
+                  className="mt-1 block w-20 border border-gray-300 rounded-l-lg shadow-sm px-4 py-2"
                 >
                   <option value="US">US</option>
                   <option value="UK">UK</option>
@@ -189,28 +229,46 @@ const DriverProfile = () => {
                   type="text"
                   name="phoneNumber"
                   value={driver.phone_number}
-                  onChange={(e) => setDriver({ ...driver, phone_number: e.target.value })}
-                  className="mt-1 block w-full border border-gray-300 rounded-r-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
+                  onChange={(e) =>
+                    setDriver({ ...driver, phone_number: e.target.value })
+                  }
+                  className="mt-1 block w-full border border-gray-300 rounded-r-lg shadow-sm px-4 py-2"
                 />
               </div>
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700">
-                Email Address
+                Address
+              </label>
+              <input
+                type="text"
+                name="address"
+                value={driver.address}
+                onChange={(e) =>
+                  setDriver({ ...driver, address: e.target.value })
+                }
+                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">
+                Email
               </label>
               <input
                 type="email"
                 name="email"
                 value={driver.user_id.email}
-                onChange={(e) => setDriver({ ...driver, email: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
+                onChange={(e) =>
+                  setDriver({ ...driver, email: e.target.value })
+                }
+                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2"
               />
             </div>
 
             {/* Image Fields */}
             <div
               className="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center mb-4 overflow-hidden cursor-pointer"
-              onClick={() => setViewImage(driver.driverLicenseImage || '')}
+              onClick={() => setViewImage(driver.driverLicenseImage || "")}
             >
               {driver.driverLicenseImage ? (
                 <img
@@ -219,15 +277,13 @@ const DriverProfile = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <span className="text-gray-500 text-2xl font-semibold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-
-                </span>
+                <span className="text-gray-500 text-2xl font-semibold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></span>
               )}
             </div>
 
             <div
               className="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center mb-4 overflow-hidden cursor-pointer"
-              onClick={() => setViewImage(driver.nationalIdCardImage || '')}
+              onClick={() => setViewImage(driver.nationalIdCardImage || "")}
             >
               {driver.nationalIdCardImage ? (
                 <img
@@ -236,9 +292,7 @@ const DriverProfile = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <span className="text-gray-500 text-2xl font-semibold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-               
-                </span>
+                <span className="text-gray-500 text-2xl font-semibold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></span>
               )}
             </div>
           </div>

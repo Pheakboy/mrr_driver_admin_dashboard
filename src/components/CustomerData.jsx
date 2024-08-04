@@ -60,7 +60,7 @@ const CustomerData = ({ searchQuery = "" }) => {
     const firstName = customer?.first_name?.toLowerCase();
     const lastName = customer?.last_name?.toLowerCase();
     return (firstName && firstName.includes(query)) || (lastName && lastName.includes(query));
-  });
+  }).reverse(); // Reverse the filtered data
 
   console.log('Filtered Data:', filteredData); // Log filtered data
 
