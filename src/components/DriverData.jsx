@@ -4,10 +4,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { API_BASE_URL } from "../config/config";
 
-const DriverData = ({ searchQuery, activeFilter, sortBy = 'created_at' }) => {
+const DriverData = ({ searchQuery, activeFilter }) => {
   const [data, setData] = useState([]);
+  const [sortBy, setSortBy] = useState('newest'); // Default to newest
 
   useEffect(() => {
+    fetchDrivers();
+  }, []);
+
+  useEffect(() => {
+    setData((prevData) => sortData(prevData, sortBy));
+  }, [sortBy]);
+
+  const fetchDrivers = () => {
     fetch(`${API_BASE_URL}/api/users/all-drivers`)
       .then((response) => {
         if (!response.ok) {
@@ -16,35 +25,27 @@ const DriverData = ({ searchQuery, activeFilter, sortBy = 'created_at' }) => {
         return response.json();
       })
       .then((data) => {
-        const sortedData = sortData(data, sortBy);
-        console.log("Sorted data:", sortedData); // Debugging log
-        setData(sortedData);
+        console.log("Fetched data:", data); // Debugging log
+        setData(sortData(data, sortBy));
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       });
-  }, [sortBy]);
+  };
 
   const sortData = (data, sortBy) => {
-    return data.slice().sort(( b,a) => {
-      if (sortBy === 'name') {
-        const nameA = `${a.first_name || ''} ${a.last_name || ''}`.toLowerCase();
-        const nameB = `${b.first_name || ''} ${b.last_name || ''}`.toLowerCase();
-        return nameA.localeCompare(nameB);
-      } else if (sortBy === 'email') {
-        const emailA = (a.user_id?.email || '').toLowerCase();
-        const emailB = (b.user_id?.email || '').toLowerCase();
-        return emailA.localeCompare(emailB);
-      } else if (sortBy === 'phone') {
-        const phoneA = (a.phone_number || '').toLowerCase();
-        const phoneB = (b.phone_number || '').toLowerCase();
-        return phoneA.localeCompare(phoneB);
-      } else { // Default sorting by created_at
-        return new Date(a.created_at) - new Date(b.created_at);
+    return data.slice().sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+
+      if (sortBy === 'newest') {
+        return dateB - dateA; // Newest first (most recent date first)
+      } else if (sortBy === 'oldest') {
+        return dateA - dateB; // Oldest first (earliest date first)
       }
+      return 0; // Default return for no sorting
     });
   };
-  
 
   const handleView = (index) => {
     const fullName = `${data[index].first_name || ''} ${data[index].last_name || ''}`;
@@ -60,13 +61,13 @@ const DriverData = ({ searchQuery, activeFilter, sortBy = 'created_at' }) => {
 
   const handleStatusChange = (index, status) => {
     const updatedData = [...data];
-    updatedData[index].status = status;
+    updatedData[index].status_register = status;
     setData(updatedData);
   };
 
   const handleAddDriver = (newDriver) => {
-    if (!newDriver.created_at) {
-      newDriver.created_at = new Date().toISOString();
+    if (!newDriver.createdAt) {
+      newDriver.createdAt = new Date().toISOString();
     }
     setData((prevData) => {
       const updatedData = [newDriver, ...prevData];
@@ -86,8 +87,8 @@ const DriverData = ({ searchQuery, activeFilter, sortBy = 'created_at' }) => {
 
     const matchesFilter =
       activeFilter === "all" ||
-      (activeFilter === "active" && driver.status === "active") ||
-      (activeFilter === "inactive" && driver.status === "inactive");
+      (activeFilter === "active" && driver.status_register === "approved") ||
+      (activeFilter === "inactive" && driver.status_register === "waiting");
 
     return matchesSearchQuery && matchesFilter;
   });
@@ -101,6 +102,24 @@ const DriverData = ({ searchQuery, activeFilter, sortBy = 'created_at' }) => {
         >
           Add Driver
         </Link>
+        <div>
+          <button
+            onClick={() => setSortBy('newest')}
+            className={`px-4 py-2 rounded-md transition duration-300 mr-2 ${
+              sortBy === 'newest' ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            Newest
+          </button>
+          <button
+            onClick={() => setSortBy('oldest')}
+            className={`px-4 py-2 rounded-md transition duration-300 ${
+              sortBy === 'oldest' ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            Oldest
+          </button>
+        </div>
       </div>
       <table className="min-w-full bg-white">
         <thead>
@@ -132,23 +151,23 @@ const DriverData = ({ searchQuery, activeFilter, sortBy = 'created_at' }) => {
                 <div className="flex items-center">
                   <button
                     className={`py-1 px-3 rounded-full text-xs mr-2 ${
-                      driver.status === "active"
+                      driver.status_register === "approved"
                         ? "bg-green-200 text-green-700"
                         : "bg-gray-200 text-gray-700"
                     }`}
-                    onClick={() => handleStatusChange(index, "active")}
+                    onClick={() => handleStatusChange(index, "approved")}
                   >
-                    Activate
+                    Approve
                   </button>
                   <button
                     className={`py-1 px-3 rounded-full text-xs ${
-                      driver.status === "inactive"
+                      driver.status_register === "waiting"
                         ? "bg-red-200 text-red-700"
                         : "bg-gray-200 text-gray-700"
                     }`}
-                    onClick={() => handleStatusChange(index, "inactive")}
+                    onClick={() => handleStatusChange(index, "waiting")}
                   >
-                    Deactivate
+                    Wait
                   </button>
                 </div>
               </td>
