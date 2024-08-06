@@ -22,7 +22,8 @@ const DriverProfile = () => {
         })
         .then((data) => {
           setDriver(data);
-          setIsApproved(data.status === "approved");
+          const approved = data.status === "approved";
+          setIsApproved(approved);
         })
         .catch((error) => {
           console.error("Error fetching driver data:", error);
@@ -51,12 +52,12 @@ const DriverProfile = () => {
       })
       .catch((error) => {
         console.error("Error approving driver profile:", error);
-        toast.error("Error approving driver profile already approved");
+        toast.error("Error approving driver profile");
       });
   };
 
   const handleCancel = () => {
-    navigate("/driver");
+    navigate("/drivers");
   };
 
   const handleImageUpload = (event, type) => {
@@ -76,10 +77,9 @@ const DriverProfile = () => {
         })
         .then((data) => {
           toast.success("Image uploaded successfully");
-          // Optionally update driver state with new image URL
           setDriver((prevDriver) => ({
             ...prevDriver,
-            [`${type}`]: data.imageUrl
+            [`${type}`]: data.imageUrl,
           }));
         })
         .catch((error) => {
@@ -132,23 +132,25 @@ const DriverProfile = () => {
           </label>
 
           {/* Save and Cancel Buttons */}
-          <div className="flex space-x-4 mt-8">
-            <button
-              className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 mx-5"
-              onClick={handleCancel}
-            >
-              Cancel
-            </button>
-            <button
-              className={`bg-green-500 text-white px-4 py-2 rounded-md transition duration-300 ${
-                isApproved ? "bg-green-600" : "hover:bg-green-600"
-              }`}
-              onClick={handleApprove}
-              disabled={isApproved}
-            >
-              {isApproved ? "Approved" : "Approve"}
-            </button>
-          </div>
+          {!isApproved && (
+            <div className="flex space-x-4 mt-8">
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 mx-5"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+              <button
+                className={`bg-green-500 text-white px-4 py-2 rounded-md transition duration-300 ${
+                  isApproved ? "bg-green-600" : "hover:bg-green-600"
+                }`}
+                onClick={handleApprove}
+                disabled={isApproved}
+              >
+                {isApproved ? "Approved" : "Approve"}
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="w-full md:w-2/3 md:pl-8">
@@ -221,7 +223,7 @@ const DriverProfile = () => {
                   }
                   className="mt-1 block w-20 border border-gray-300 rounded-l-lg shadow-sm px-4 py-2"
                 >
-                  <option value="US">US</option>
+                  <option value="US">Kh</option>
                   <option value="UK">UK</option>
                   <option value="IN">IN</option>
                 </select>
@@ -264,35 +266,35 @@ const DriverProfile = () => {
                 className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2"
               />
             </div>
-
-            {/* Image Fields */}
+          </div>
+          {/* Image Fields */}
+          <div className="flex justify-evenly">
             <div
-              className="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center mb-4 overflow-hidden cursor-pointer"
-              onClick={() => setViewImage(driver.driverLicenseImage || "")}
+              className="w-64 h-64 bg-gray-300 rounded-md flex items-center justify-center mb-4 overflow-hidden cursor-pointer"
+              onClick={() => setViewImage(driver.driving_license_image_url || "")}
             >
-              {driver.driverLicenseImage ? (
-                <img
-                  src={driver.driverLicenseImage}
+              {driver.driving_license_image_url ? (
+                <img 
+                  src={driver.driving_license_image_url}
                   alt="Driver License"
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <span className="text-gray-500 text-2xl font-semibold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></span>
+                <span className="text-gray-500 text-2xl font-semibold">Driver License</span>
               )}
             </div>
-
             <div
-              className="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center mb-4 overflow-hidden cursor-pointer"
-              onClick={() => setViewImage(driver.nationalIdCardImage || "")}
+              className="w-64 h-64 bg-gray-300 rounded-md flex items-center justify-center mb-4 overflow-hidden cursor-pointer"
+              onClick={() => setViewImage(driver.id_card_image_url || "")}
             >
-              {driver.nationalIdCardImage ? (
+              {driver.id_card_image_url ? (
                 <img
-                  src={driver.nationalIdCardImage}
+                  src={driver.id_card_image_url}
                   alt="National ID Card"
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <span className="text-gray-500 text-2xl font-semibold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></span>
+                <span className="text-gray-500 text-2xl font-semibold">ID Card</span>
               )}
             </div>
           </div>
@@ -301,15 +303,15 @@ const DriverProfile = () => {
 
       {/* Modal to view clicked image */}
       {viewImage && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="max-w-md w-full bg-white p-4 rounded-lg shadow-lg">
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg shadow-lg max-w-4xl w-full h-auto relative">
             <img
               src={viewImage}
               alt="View Image"
-              className="w-full h-auto max-h-96 object-contain"
+              className="w-full h-auto max-h-screen object-contain"
             />
             <button
-              className="float-right mt-5 bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition duration-300"
+              className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300"
               onClick={() => setViewImage(null)}
             >
               Close

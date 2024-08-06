@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { API_BASE_URL } from "../config/config";
 
-const DriverData = ({ searchQuery, activeFilter }) => {
+const DriverData = ({ searchQuery, activeFilter, sortBy = 'created_at' }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -16,28 +16,43 @@ const DriverData = ({ searchQuery, activeFilter }) => {
         return response.json();
       })
       .then((data) => {
-        const sortedData = data.sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        );
-        setData(sortedData); // Sort by created_at in descending order
+        const sortedData = sortData(data, sortBy);
+        console.log("Sorted data:", sortedData); // Debugging log
+        setData(sortedData);
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       });
-  }, []);
+  }, [sortBy]);
+
+  const sortData = (data, sortBy) => {
+    return data.slice().sort(( b,a) => {
+      if (sortBy === 'name') {
+        const nameA = `${a.first_name || ''} ${a.last_name || ''}`.toLowerCase();
+        const nameB = `${b.first_name || ''} ${b.last_name || ''}`.toLowerCase();
+        return nameA.localeCompare(nameB);
+      } else if (sortBy === 'email') {
+        const emailA = (a.user_id?.email || '').toLowerCase();
+        const emailB = (b.user_id?.email || '').toLowerCase();
+        return emailA.localeCompare(emailB);
+      } else if (sortBy === 'phone') {
+        const phoneA = (a.phone_number || '').toLowerCase();
+        const phoneB = (b.phone_number || '').toLowerCase();
+        return phoneA.localeCompare(phoneB);
+      } else { // Default sorting by created_at
+        return new Date(a.created_at) - new Date(b.created_at);
+      }
+    });
+  };
+  
 
   const handleView = (index) => {
-    const fullName = `${data[index].first_name} ${data[index].last_name}`;
+    const fullName = `${data[index].first_name || ''} ${data[index].last_name || ''}`;
     alert(`Viewing driver: ${fullName}`);
   };
 
-  const handleEdit = (index) => {
-    const fullName = `${data[index].first_name} ${data[index].last_name}`;
-    alert(`Editing driver: ${fullName}`);
-  };
-
   const handleDelete = (index) => {
-    const fullName = `${data[index].first_name} ${data[index].last_name}`;
+    const fullName = `${data[index].first_name || ''} ${data[index].last_name || ''}`;
     if (window.confirm(`Are you sure you want to delete ${fullName}?`)) {
       setData(data.filter((_, i) => i !== index));
     }
@@ -49,12 +64,25 @@ const DriverData = ({ searchQuery, activeFilter }) => {
     setData(updatedData);
   };
 
+  const handleAddDriver = (newDriver) => {
+    if (!newDriver.created_at) {
+      newDriver.created_at = new Date().toISOString();
+    }
+    setData((prevData) => {
+      const updatedData = [newDriver, ...prevData];
+      return sortData(updatedData, sortBy);
+    });
+  };
+
   const filteredData = data.filter((driver) => {
-    const fullName = `${driver.first_name} ${driver.last_name}`.toLowerCase();
-    const email = driver.user_id.email;
+    const fullName = `${driver.first_name || ''} ${driver.last_name || ''}`.toLowerCase();
+    const email = (driver.user_id?.email || '').toLowerCase();
+    const phone = (driver.phone_number || '').toLowerCase();
+
     const matchesSearchQuery =
       fullName.includes(searchQuery.toLowerCase()) ||
-      email.includes(searchQuery.toLowerCase());
+      email.includes(searchQuery.toLowerCase()) ||
+      phone.includes(searchQuery.toLowerCase());
 
     const matchesFilter =
       activeFilter === "all" ||
@@ -95,11 +123,11 @@ const DriverData = ({ searchQuery, activeFilter }) => {
                   to={`/driver/${driver._id}`}
                   className="text-blue-500 hover:underline"
                 >
-                  {`${driver.first_name} ${driver.last_name}`}
+                  {`${driver.first_name || ''} ${driver.last_name || ''}`}
                 </Link>
               </td>
-              <td className="py-3 px-6 text-left">{driver.user_id.email}</td>
-              <td className="py-3 px-6 text-left">{driver.phone_number}</td>
+              <td className="py-3 px-6 text-left">{driver.user_id?.email || 'N/A'}</td>
+              <td className="py-3 px-6 text-left">{driver.phone_number || 'N/A'}</td>
               <td className="py-3 px-6 text-left">
                 <div className="flex items-center">
                   <button
@@ -132,12 +160,7 @@ const DriverData = ({ searchQuery, activeFilter }) => {
                   >
                     <FontAwesomeIcon icon={faEye} />
                   </button>
-                  <button
-                    className="text-gray-500 hover:text-gray-700 mr-2"
-                    onClick={() => handleEdit(index)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>
+
                   <button
                     className="text-gray-500 hover:text-gray-700"
                     onClick={() => handleDelete(index)}

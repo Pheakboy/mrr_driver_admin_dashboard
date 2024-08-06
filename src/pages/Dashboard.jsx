@@ -24,13 +24,13 @@ const Dashboard = () => {
     if (isAuthenticated) {
       const fetchData = async () => {
         const data = [
-          { month: "January", bookings: 65, passengers: 120, revenue: 100 },
           { month: "February", bookings: 59, passengers: 110, revenue: 150 },
           { month: "March", bookings: 80, passengers: 150, revenue: 120 },
           { month: "April", bookings: 81, passengers: 160, revenue: 130 },
-          { month: "May", bookings: 56, passengers: 100, revenue: 250 },
+          { month: "May", bookings: 56, passengers: 100, revenue: 150 },
           { month: "June", bookings: 55, passengers: 90, revenue: 80 },
           { month: "July", bookings: 40, passengers: 70, revenue: 60 },
+          { month: "Augest", bookings: 40, passengers: 12, revenue: 109 },
         ];
         setBookingsData(data);
       };

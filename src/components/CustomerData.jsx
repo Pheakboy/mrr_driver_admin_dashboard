@@ -45,9 +45,6 @@ const CustomerData = ({ searchQuery = "" }) => {
     alert(`Viewing customer: ${data[index]?.first_name} ${data[index]?.last_name}`);
   };
 
-  const handleEdit = (index) => {
-    alert(`Editing customer: ${data[index]?.first_name} ${data[index]?.last_name}`);
-  };
 
   const handleDelete = (index) => {
     if (window.confirm(`Are you sure you want to delete ${data[index]?.first_name} ${data[index]?.last_name}?`)) {
@@ -62,7 +59,7 @@ const CustomerData = ({ searchQuery = "" }) => {
     return (firstName && firstName.includes(query)) || (lastName && lastName.includes(query));
   }).reverse(); // Reverse the filtered data
 
-  console.log('Filtered Data:', filteredData); // Log filtered data
+  // console.log('Filtered Data:', filteredData); // Log filtered data
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -74,8 +71,7 @@ const CustomerData = ({ searchQuery = "" }) => {
           <tr className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white uppercase text-sm leading-normal">
             <th className="py-3 px-6 text-left">Name</th>
             <th className="py-3 px-6 text-left">Phone Number</th>
-            <th className="py-3 px-6 text-left">Email</th>
-            <th className="py-3 px-6 text-left">Status</th>
+            <th className="py-3 px-6 text-left">Email (Optional)</th>
             <th className="py-3 px-6 text-left">Action</th>
           </tr>
         </thead>
@@ -87,27 +83,11 @@ const CustomerData = ({ searchQuery = "" }) => {
               <td className="py-3 px-6 text-left">{customer?.user_id?.email}</td>
               <td className="py-3 px-6 text-left">
                 <div className="flex items-center">
-                  <button className="bg-green-200 text-green-700 py-1 px-3 rounded-full text-xs mr-2">
-                    Activate
-                  </button>
-                  <button className="bg-red-200 text-red-700 py-1 px-3 rounded-full text-xs">
-                    Deactivate
-                  </button>
-                </div>
-              </td>
-              <td className="py-3 px-6 text-left">
-                <div className="flex items-center">
                   <button
                     className="text-gray-500 hover:text-gray-700 mr-2"
                     onClick={() => handleView(index)}
                   >
                     <FontAwesomeIcon icon={faEye} />
-                  </button>
-                  <button
-                    className="text-gray-500 hover:text-gray-700 mr-2"
-                    onClick={() => handleEdit(index)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
                   </button>
                   <button
                     className="text-gray-500 hover:text-gray-700"

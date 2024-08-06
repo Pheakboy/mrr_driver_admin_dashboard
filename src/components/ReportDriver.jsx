@@ -5,10 +5,10 @@ const ReportDriver = () => {
   return (
     <div>
       <div className="bg-slate-200 ml-12 mr-12 h-full mb-8 rounded-xl">
-        <b className="text-yellow-600 text-2xl ml-8 mb-6">Report</b>
+        <b className="text-yellow-600 text-2xl ml-8 my-8">Report</b>
         <div className="border-2 border-black mt-8"></div>
-        <label className="ml-4 hover:text-sky-600 mt-2">Search trip...</label>
-        <div>
+        {/* <label className="ml-4 hover:text-sky-600 mt-2">Search trip...</label> */}
+        <div className="mt-9">
           <Link
             to="/drivers"
             className="ml-8 text-sky-600 hover:text-sky-800"
@@ -39,16 +39,6 @@ const ReportDriver = () => {
             className="border border-black bg-slate-200 placeholder-black pl-4 rounded-md"
             placeholder="To Date"
           ></input>
-          <label>
-            <select
-              name="selectedFruit"
-              className="bg-slate-200 border border-black placeholder-black pl-4 rounded-md"
-            >
-              <option value="">Select Fruit</option>
-              <option value="apple">Apple</option>
-              <option value="banana">Banana</option>
-            </select>
-          </label>
         </div>
         <div className="grid grid-cols-3 gap-4 w-96 ml-8 mt-6">
           <button
